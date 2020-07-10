@@ -17,14 +17,14 @@ class View {
      * 模板输出变量
      * @var tVar
      * @access protected
-     */ 
+     */
     protected $tVar     =   array();
 
     /**
      * 模板主题
      * @var theme
      * @access protected
-     */ 
+     */
     protected $theme    =   '';
 
     /**
@@ -154,7 +154,7 @@ class View {
         //因TP的挂件在跨模块调用时不太好使，这里将主题地址改成变量获取，不使用常量
         $theme_path = $this->getThemePath($module);
         // 获取当前主题的模版路径
-        // defined('THEME_PATH') or    define('THEME_PATH', $this->getThemePath($module));
+        defined('THEME_PATH') or    define('THEME_PATH', $this->getThemePath($module));
 
         // 分析模板文件规则
         if('' == $template) {
@@ -163,7 +163,7 @@ class View {
         }elseif(false === strpos($template, $depr)){
             $template = CONTROLLER_NAME . $depr . $template;
         }
-        $file   =   $theme_path.$template.C('TMPL_TEMPLATE_SUFFIX');
+        $file   =   THEME_PATH.$template.C('TMPL_TEMPLATE_SUFFIX');
         if(C('TMPL_LOAD_DEFAULTTHEME') && THEME_NAME != C('DEFAULT_THEME') && !is_file($file)){
             // 找不到当前主题模板的时候定位默认主题中的模板
             $file   =   dirname(theme_path).'/'.C('DEFAULT_THEME').'/'.$template.C('TMPL_TEMPLATE_SUFFIX');
@@ -182,8 +182,9 @@ class View {
         $theme = $this->getTemplateTheme();
         // 获取当前主题的模版路径
         $tmplPath   =   C('VIEW_PATH'); // 模块设置独立的视图目录
-        if(!$tmplPath){ 
+        if(!$tmplPath){
             // 定义TMPL_PATH 则改变全局的视图目录到模块之外
+            $tmplPath   =   defined('TMPL_PATH')? TMPL_PATH.$module.'/' : MODULE_PATH .C('DEFAULT_V_LAYER').'/';
             $tmplPath   =   defined('TMPL_PATH')? TMPL_PATH.$module.'/' : APP_PATH.$module.'/'.C('DEFAULT_V_LAYER').'/';
         }
         return $tmplPath.$theme;
